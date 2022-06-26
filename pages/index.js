@@ -21,13 +21,13 @@ export default function Home({ data }) {
   }
 
   const handleSelect = (e) => {
-    console.log(e.target.value)
+
     if (e.target.value === 'az') {
       const filtered = data.sort((a, b) => a.name.common.localeCompare(b.name.common))
       setFilteredData([...filtered])
     }
     if (e.target.value === 'all') {
-      setFilteredData(data)
+      setFilteredData(...filteredData)
     }
     if (e.target.value === 'population') { 
       const filtered = data.sort((a, b) => b.population - a.population)
@@ -79,7 +79,7 @@ export default function Home({ data }) {
               <SelectFilter handleSelect={handleSelect} />
             </div>
             <div className='text-center'>
-              <span className="font-bold">{next}</span> / <span className="font-medium">{filteredData.length}</span>
+              <span className="font-bold">{filteredData.length}</span> / <span className="font-medium">{data.length}</span>
             </div>
           </div>
         </div>
