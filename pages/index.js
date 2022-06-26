@@ -5,10 +5,14 @@ import SearchInput from '../components/SearchInput';
 import SelectFilter from '../components/SelectFilter';
 import Link from 'next/link';
 
+const PAGE_SIZE = 20
+
 export default function Home({ data }) {
 
   const [query, setQuery] = useState('')
   const [filteredData, setFilteredData] = useState(data)
+  const [next, setNext] = useState(PAGE_SIZE)
+
 
   const  searchCountry = (e) => {
     setQuery(e.target.value)
@@ -51,7 +55,12 @@ export default function Home({ data }) {
     }
   }
 
+  const handleMore = () => {
+    setNext(next + PAGE_SIZE)
+  }
+
   useEffect(() => { }, [filteredData])
+
 
  
   return (
@@ -64,20 +73,22 @@ export default function Home({ data }) {
       <div className="sticky w-full top-0 bg-white z-10 py-5 shadow-lg mb-5">
         <div className="container mx-auto px-5">
           <h1 className='text-3xl font-bold mb-5'>Countries</h1>
-          <div className="flex justify-between mb-5 gap-20">
-            <SearchInput query={query} searchCountry={searchCountry} />
-            <SelectFilter handleSelect={handleSelect} />
+          <div className="flex gap-5 flex-col justify-center">
+            <div className="flex gap-20 justify-between">
+              <SearchInput query={query} searchCountry={searchCountry} />
+              <SelectFilter handleSelect={handleSelect} />
+            </div>
+            <div className='text-center'>
+              <span className="font-bold">{next}</span> / <span className="font-medium">{filteredData.length}</span>
+            </div>
           </div>
         </div>
       </div>
       <div className='container mx-auto mb-5 px-5'>
-        <div className='mb-5 text-center'>
-          <span className="font-bold">{filteredData.length}</span> / <span className="font-medium">{data.length}</span>
-        </div>
         {
           filteredData.length > 0 ? (
             <div className='grid grid-cols-1 lg:grid-cols-4 gap-4 md:grid-cols-2'>
-              {filteredData.map(country => (
+              {filteredData.slice(0, next).map(country => (
                 <Link href={`/detail/${country.cca3?.toLowerCase()}`} key={country.name.common}>
                   <a>
                     <CountryCard country={country} />
@@ -91,6 +102,14 @@ export default function Home({ data }) {
               </div>
           )
         }
+        {next < filteredData?.length && (
+          <button
+            className="w-full mt-5 text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+            onClick={handleMore}
+          >
+            Load more
+          </button>
+        )}
       </div>
     </>
   )
