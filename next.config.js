@@ -5,7 +5,7 @@ const nextConfig = {
     domains: ['flagcdn.com', 'upload.wikimedia.org'],
   },
   env: {
-    googleApiKey: 'AIzaSyAATFJ1k-0y2jIrNiLqkYjxmwgGdyEVbfg',
+    googleApiKey: process.env.GOOGLE_MAPS_API,
   },
 }
 
